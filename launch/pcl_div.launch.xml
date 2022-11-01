@@ -1,6 +1,7 @@
 <launch>
   <arg name="input/pcl/pred" default="/perception/obstacle_segmentation/single_frame/pointcloud_raw"/>
-  <arg name="input/pcl/gt" default="/perception/obstacle_segmentation/range_cropped/pointcloud"/>
+  <!-- <arg name="input/pcl/gt" default="/perception/obstacle_segmentation/range_cropped/pointcloud"/> -->
+  <arg name="input/pcl/gt" default="/lidar_front/points_xyzi"/>
 
   <node name="pcl_div" exec="pcl_div" pkg="pcl_div" output="screen">
     <remap from="~/input/pcl/gt" to="$(var input/pcl/gt)"/>

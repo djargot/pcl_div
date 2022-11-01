@@ -28,12 +28,12 @@ namespace pcl_div
         tf_buffer_ptr_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
         tf_listener_ptr_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_ptr_);
         writer_ = std::make_unique<rosbag2_cpp::Writer>();
-        writer_->open("pcl_gt_and_pred_3");
+        writer_->open("morai_gt_1");
 
         rosbag2_storage::StorageOptions storage_options;
         rosbag2_cpp::ConverterOptions converter_options;
 
-        storage_options.uri = std::string("/home/dominik/Downloads/rosbag2");
+        storage_options.uri = std::string("/home/dominik/my-code/morai_sim_drive_rosbag2_220602_r1/morai_sim_drive_rosbag2_220602_r1_Normal");
         storage_options.storage_id = "sqlite3";
         converter_options.output_serialization_format = "cdr";
         reader_.open(storage_options, converter_options);
@@ -43,7 +43,7 @@ namespace pcl_div
             // std::cout << "Found topic name " << bag_message->topic_name << std::endl;
             std::vector<rosbag2_storage::TopicMetadata> topics = reader_.get_all_topics_and_types();
 
-            if (bag_message->topic_name == "/perception/obstacle_segmentation/range_cropped/pointcloud") 
+            if (bag_message->topic_name == "/lidar_front/points_xyzi") 
             {
                 PointCloud2 extracted_test_msg;
                 rclcpp::Serialization<PointCloud2> serialization;
@@ -62,6 +62,17 @@ namespace pcl_div
                 rclcpp::Time t = extracted_test_msg.header.stamp;
 
                 writer_->write(extracted_test_msg, "/perception/obstacle_segmentation/single_frame/pointcloud_raw", t);
+            }
+            if (bag_message->topic_name == "/lidar_front/points_xyzi") 
+            {
+                PointCloud2 extracted_test_msg;
+                rclcpp::Serialization<PointCloud2> serialization;
+                rclcpp::SerializedMessage extracted_serialized_msg(*bag_message->serialized_data);
+                serialization.deserialize_message(
+                                                &extracted_serialized_msg, &extracted_test_msg);
+                rclcpp::Time t = extracted_test_msg.header.stamp;
+
+                writer_->write(extracted_test_msg, "/sensing/lidar/concatenated/pointcloud", t);
             }
         }
         // Gt ground and objects publishers
@@ -99,7 +110,8 @@ namespace pcl_div
             {
                 cnt++;
             }
-            else if (point.intensity == 127 || point.intensity == 120 || point.intensity == 0 || point.intensity == 10)
+            // else if (point.intensity == 127 || point.intensity == 120 || point.intensity == 0 || point.intensity == 10)
+            else if (point.intensity == 55 || point.intensity == 32 || point.intensity == 31 || (point.intensity >= 84 && point.intensity <= 90))
             {
                 cnt_no_0++;
                 pcl_gt_ground_xyz->points.push_back({point.x, point.y, point.z});
