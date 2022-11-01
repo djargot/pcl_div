@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(pcl_div)
+project(bag_merge)
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
@@ -14,7 +14,7 @@ ament_auto_add_library(${PROJECT_NAME}_node SHARED
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}_node
-  PLUGIN "pcl_div::PclNode"
+  PLUGIN "bag_merge::PclNode"
   EXECUTABLE ${PROJECT_NAME}
 )
 
@@ -22,3 +22,4 @@ ament_auto_package(
   INSTALL_TO_SHARE
     launch
 )
+

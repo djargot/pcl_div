@@ -1,0 +1,7 @@
+<launch>
+  <arg name="input/bag/1" default="/perception/obstacle_segmentation/single_frame/pointcloud_raw"/>
+  <arg name="input/bag/2" default="/lidar_front/points_xyzi"/>
+
+  <node name="bag_merge" exec="bag_merge" pkg="bag_merge" output="screen">
+  </node>
+</launch>
